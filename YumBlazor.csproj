@@ -19,7 +19,6 @@
     <Folder Include="Services\Extensions\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
 </Project>
