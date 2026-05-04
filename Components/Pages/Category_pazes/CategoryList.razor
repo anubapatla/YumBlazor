@@ -1,5 +1,6 @@
 ﻿
 @page "/category"
+@inject ICategoryRepository _categoryRepository
 
 @if(IsProcessing)
 {
@@ -26,7 +27,40 @@ else
                 <button class="btn btn-lg btn-secondary" style="width:250px;">AddCategory</button>
             </div>
         </div>
-        <p>Category List</p>
+        @if(Categories.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var obj in Categories)
+                        {
+                            <tr>
+                                <td>@obj.Name</td>
+                                <td>Buttons</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                No categories found. Please add a category.
+            </div>
+            }
+    )
         </div>
     </div>
     
@@ -34,6 +68,7 @@ else
 
 @code {
     public bool IsProcessing { get; set; } = false; 
+    private IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,6 +79,7 @@ else
     }
     private void LoadCategories()
     {
+        Categories = _categoryRepository.GetAll();
         // Logic to load categories goes here
     }
 }
