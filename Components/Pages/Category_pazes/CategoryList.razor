@@ -67,16 +67,28 @@ else
 }
 
 @code {
-    public bool IsProcessing { get; set; } = false; 
+    public bool IsProcessing { get; set; } = true; 
     private IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
-        IsProcessing = true;
-        //await Task.Yield();
-        await LoadCategories();// Simulate a delay for loading
-        Thread.Sleep(3000);
-        IsProcessing = false;
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+           IsProcessing = true;
+            StateHasChanged();
+            //await Task.Yield();
+            await LoadCategories();// Simulate a delay for loading
+            //Thread.Sleep(3000);
+            IsProcessing = false;
+            StateHasChanged();
+            // Logic to execute after the first render goes here
+
+        }
+        //return base.OnAfterRenderAsync(firstRender);
     }
     private async Task LoadCategories()
     {
