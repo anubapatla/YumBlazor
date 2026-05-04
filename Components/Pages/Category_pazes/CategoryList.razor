@@ -60,7 +60,7 @@ else
                 No categories found. Please add a category.
             </div>
             }
-    )
+    
         </div>
     </div>
     
@@ -73,13 +73,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         IsProcessing = true;
-        await Task.Delay(2000);
-        LoadCategories();// Simulate a delay for loading
+        //await Task.Yield();
+        await LoadCategories();// Simulate a delay for loading
+        Thread.Sleep(3000);
         IsProcessing = false;
     }
-    private void LoadCategories()
+    private async Task LoadCategories()
     {
-        Categories = _categoryRepository.GetAll();
+        
+        Categories = await _categoryRepository.GetAllAsync();
         // Logic to load categories goes here
     }
 }
