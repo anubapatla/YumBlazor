@@ -4,7 +4,7 @@
 
 @if(IsProcessing)
 {
-    <div class="position-absolute w-75 h-75 d-flex flex-coumn align-items-center bg-white justify-content-center">
+    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
      
         <img src="/images/loading.webp" alt="loading "/>
     </div>
@@ -24,7 +24,9 @@ else
     <div class="card-body p-4">
         <div class="row pb-3">
             <div class="col-12 text-end">
-                    <a href="category/create" class="btn btn-lg btn-secondary" style="width:250px;">AddCategory</a>
+                    <a href="category/create" class="btn btn-lg btn-secondary" style="width:250px;">
+                        <i class="bi bi-plus-square"></i>AddCategory
+                    </a>
             </div>
         </div>
         @if(Categories.Any())
@@ -45,8 +47,9 @@ else
                                 <td>@obj.Name</td>
                                 <td>
                                     <a href="@($"category/update/{obj.Id}")" class="btn btn-primary">
-                                        Edit</a>
-                                    <button class="btn btn-danger">Delete</button>
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <button class="btn btn-danger"> <i class="bi bi-trash3"></i>Delete</button>
                                 </td>
                                 
                                    
