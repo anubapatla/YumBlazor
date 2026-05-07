@@ -1,6 +1,7 @@
 ﻿@page "/category/create"
 @page "/category/update/{id:int}"
 @inject ICategoryRepository _categoryRepository
+@inject NavigationManager _navigationManager
 
 <h3>CategoryUpsert</h3>
 @if(IsProcessing)
@@ -17,23 +18,39 @@ else
 
                 <div class="row">
                 <div class="col-12 text-center">
-                 <h2 class="text-white py-2">@(Id > 0 ? "Create Category" : "Update Category")</h2>
+                 <h2 class="text-white py-2">@(Id>0? "Create" : "Update") Category</h2>
              </div>
          </div>
     </div>
     
     <div class="card-body p-4">
-        <div class="row pb-3">
-            <div class="col-12 text-end">
-                    <a href="category/create" class="btn btn-lg btn-secondary" style="width:250px;">
-                        <i class="bi bi-plus-square"></i>AddCategory
+            <EditForm Model="Category"  FormName="CategoryUpsertForm" OnValidSubmit="UpsertCategory">
+             <DataAnnotationsValidator/>
+             <div class="border p-3 mt-4">
+                 <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Category.Name" class="form-control" id="Name" placeholder="Name" />
+                        <label for="Name">Name</label>
+                        <ValidationMessage For="@(() => Category.Name)" />  
+                 </div>
+                 <div class="row mt-3">
+                 <div class="col-6 col-md-3">
+                     <button type="submit" class="btn btn-primary form-control" disabled="@IsProcessing">
+                            <i class="bi bi-floppy"></i> Update
+                     </button>
+                 </div>
+                    <div class="col-6 col-md-3">
+                    <a href="category" class="btn btn-secondary form-control" disabled="@IsProcessing">
+                            <i class="bi bi-arrow-bar-left"></i> Back to list
                     </a>
+                   </div>
+                </div>
+             </div>
+            </EditForm>
             </div>
         </div>
         
     
-        </div>
-    </div>
+        
     }
 
 
@@ -67,8 +84,26 @@ else
             Category = await _categoryRepository.GetAsync(Id);
         }
         // Simulate loading category data based on the Id
-            //await Task.Delay(1000); // Simulate a delay for loading
-          //  Category = new Category { Id = Id, Name = $"Category {Id}" }; // Replace with actual data retrieval logic
-       
+        //await Task.Delay(1000); // Simulate a delay for loading
+        //  Category = new Category { Id = Id, Name = $"Category {Id}" }; // Replace with actual data retrieval logic
+
+    }
+    private async Task UpsertCategory()
+    {
+        IsProcessing = true;
+        if (Category.Id == 0)
+        {
+            // Create existing category
+            await _categoryRepository.CreateAsync(Category);
+            // Show success message or navigate to another page
+        }
+        else
+        {
+            // Update new category
+            await _categoryRepository.UpdateAsync(Category);
+            // Show success message or navigate to another page
+        }
+        IsProcessing = false;
+        _navigationManager.NavigateTo("categoty");
     }
 }
