@@ -1,8 +1,8 @@
-﻿window.ShowToastr = function (type, message) {
-    if (type == "success") {
+﻿function ShowToastr(type, message) {
+    if (type === "success") {
         toastr.success(message);
-    }
-    if (type == "error") {
+    } else if (type === "error") {
         toastr.error(message);
+
     }
 }
