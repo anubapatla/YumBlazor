@@ -1,6 +1,8 @@
 ﻿@page "/product/create"
 @page "/product/update/{id:int}"
 @inject IProductRepository _productRepository
+@inject ICategoryRepository _categoryRepository
+
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _JS
 
@@ -19,7 +21,7 @@ else
 
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="text-white py-2">@(Id > 0 ? "Create" : "Update") Product</h2>
+                    <h2 class="text-white py-2">@(Id==0? "Create" : "Update") Product</h2>
                 </div>
             </div>
         </div>
@@ -32,6 +34,32 @@ else
                         <InputText @bind-Value="Product.Name" class="form-control" id="Name" placeholder="Name" />
                         <label for="Name">Name</label>
                         <ValidationMessage For="@(() => Product.Name)" />
+                            </div>
+                        <div class="border py-3 col-12>
+                            <div class="form-floating py-3 col-12">
+                                <InputText @bind-Value="Product.Description" class="form-control" id="Description" placeholder="Description" />
+                                <label for="Description">Description</label>
+                                <ValidationMessage For="@(() => Product.Description)" />
+                                    </div>
+
+                                    <div class="form-floating py-3 col-12">
+                                        <InputSelect @bind-Value="Product.CategoryId" class="form-select" id="category">
+
+                                            <option value="0" disabled selected>--Select a category--</option>
+                                            @foreach (var category in _categories)
+                                            {
+                                                <option value="@category.Id">@category.Name</option>
+                                            }   
+                                        </InputSelect>
+                                        <label for="category">Category</label>
+                                        <ValidationMessage For="@(() => Product.CategoryId)" />
+                                            </div>
+                        <div class="form-floating py-3 col-12">
+                            <InputNumber @bind-Value="Product.Price" class="form-control" id="Price" placeholder="Price" />
+                            <label for="Price">Price</label>
+                            <ValidationMessage For="@(() => Product.Price)" />
+
+
                     </div>
                     <div class="row mt-3">
                         <div class="col-6 col-md-3">
@@ -59,7 +87,8 @@ else
     [Parameter]
     public int Id { get; set; }
     [SupplyParameterFromForm]
-    private Product Product { get; set; } = new();
+    private Product Product { get; set; } = new Product();
+    private IEnumerable<Category> _categories = new List<Category>();
     public bool IsProcessing { get; set; } = true;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,7 +98,7 @@ else
             IsProcessing = true;
             StateHasChanged();
             //await Task.Yield();
-            await LoadProduct();// Simulate a delay for loading
+            await LoadProductAndCategoryList();// Simulate a delay for loading
             //Thread.Sleep(3000);
             IsProcessing = false;
             StateHasChanged();
@@ -78,12 +107,13 @@ else
         }
         //return base.OnAfterRenderAsync(firstRender);
     }
-    private async Task LoadProduct()
+    private async Task LoadProductAndCategoryList()
     {
         if (Id > 0)
         {
             Product = await _productRepository.GetAsync(Id);
         }
+        _categories = await _categoryRepository.GetAllAsync();
         // Simulate loading product data based on the Id
         //await Task.Delay(1000); // Simulate a delay for loading
         //  Product = new Product { Id = Id, Name = $"Product {Id}" }; // Replace with actual data retrieval logic
