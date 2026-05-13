@@ -64,7 +64,7 @@ else
                     <div class="row mt-3">
                         <div class="col-6 col-md-3">
                             <button type="submit" class="btn btn-primary form-control" disabled="@IsProcessing">
-                                <i class="bi bi-floppy"></i> Update
+                                    <i class="bi bi-floppy"></i> @(Id == 0 ? "Create" : "Update")
                             </button>
                         </div>
                         <div class="col-6 col-md-3">
@@ -95,8 +95,8 @@ else
     {
         if (firstRender)
         {
-            IsProcessing = true;
-            StateHasChanged();
+            //IsProcessing = true;
+            //StateHasChanged();
             //await Task.Yield();
             await LoadProductAndCategoryList();// Simulate a delay for loading
             //Thread.Sleep(3000);
@@ -140,4 +140,3 @@ else
         _navigationManager.NavigateTo("categoty");
     }
 }
-f

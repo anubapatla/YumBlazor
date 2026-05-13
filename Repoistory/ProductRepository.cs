@@ -32,17 +32,18 @@ namespace YumBlazor.Repoistory
 
         public async Task<Product> GetAsync(int id)
         {
-            var obj = _db.Product.FirstOrDefaultAsync(u => u.Id == id);
-            if (obj != null)
+            var obj = await _db.Product.FirstOrDefaultAsync(u => u.Id == id);
+            if (obj == null)
             {
                 return new Product();
             }
-            return await obj;
+            return obj;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await _db.Product.ToListAsync();
+            return await _db.Product.Include(p => p.Category)
+                            .ToListAsync();
         }
 
         public async Task<Product> UpdateAsync(Product obj)
