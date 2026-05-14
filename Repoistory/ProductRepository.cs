@@ -42,7 +42,7 @@ namespace YumBlazor.Repoistory
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await _db.Product.Include(p => p.Category)
+            return await _db.Product.Include(u => u.Category)
                             .ToListAsync();
         }
 
